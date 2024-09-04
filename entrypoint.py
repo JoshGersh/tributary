@@ -44,7 +44,7 @@ def collect_engine_temperature():
     engine_temperature_values = database.lrange(DATA_KEY, 0, -1)
     logger.info(f"recived engine temperature successful from redis: {engine_temperature_values}")
 
-    # Convert strings to floats (or int if you're sure the values are whole numbers)
+    # Convert strings to floats and sums engine temperature values
     engine_temperature_sum = 0
     for temp in engine_temperature_values:
         engine_temperature_sum += float(temp)
@@ -53,13 +53,14 @@ def collect_engine_temperature():
     average_engine_temperature = engine_temperature_sum / len(engine_temperature_values)
 
     logger.info(f"calculated average engine temperature: {average_engine_temperature}")
-    logger.info(f"returning current engine temperature: {engine_temperature_values[0]}")
+    logger.info(f"last engine temperature: {engine_temperature_values[0]}")
 
     # Prepare the result dictionary to be returned as a JSON response
     result = {
         "current_engine_temperature": engine_temperature_values[0],
         "average_engine_temperature": average_engine_temperature
     }
+
     logger.info(f"collect request successful")
 
     # Return the result with a 200 OK status code
